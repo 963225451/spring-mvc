@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itheima.dao.OrderDao">
+<select id="fandSetmealIdByMemberId" parameterType="Integer" resultType="order">
+    select * from t_order where  member_id=#{member_id}
+</select>
+<insert id="add" parameterType="order" useGeneratedKeys="true" keyProperty="id">
+        insert into t_order (member_id,orderDate,orderType,orderStatus,setmeal_id) values (#{member_Id},#{orderDate},#{orderType},#{orderStatus},#{setmeal_Id})
+</insert>
+    <select id="fandById" parameterType="Integer" resultType="order">
+        select * from t_order where  id=#{id}
+    </select>
+    <select id="fandOrderInfoById" parameterType="Integer" resultType="map">
+        SELECT u.name member,o.orderDate,o.orderType,s.name setmeal FROM t_setmeal s, t_order o,t_member u WHERE o.member_id=u.id AND o.setmeal_id=s.id AND o.id=#{id}
+    </select>
+    <select id="fandOrderOfDate" parameterType="String" resultType="order">
+        select * from t_order where orderDate=#{today}
+    </select>
+    <select id="fandOrderOfDateByStatus" resultType="order">
+         select * from t_order where orderStatus=#{status} and orderDate=#{date}
+    </select>
+    <select id="countOrderOfWeek" parameterType="String" resultType="Integer">
+           select count(*)from t_order where orderDate &gt;=#{thisWeekMonday} and orderDate &lt;=#{thisWeekLastday}
+    </select>
+    <select id="countWeekOrderBystatus" resultType="Integer">
+       select  count(*)from t_order where orderStatus=#{status} and orderDate=#{date}
+    </select>
+    <select id="countOrderOfMonth" resultType="Integer">
+         select  count(*) from t_order where orderDate &gt;=#{begin} and orderDate &lt;=#{after}
+    </select>
+    <select id="countOrderOfMonthByStatus" resultType="int">
+         select  count(*) from t_order where orderDate &gt;=#{begin} and orderDate &lt;=#{after} and  orderStatus=#{status}
+    </select>
+    <select id="fandCountBySetmeal" resultType="map">
+          SELECT COUNT(id) count,setmeal_id setmealId FROM t_order GROUP BY setmeal_id
+    </select>
+</mapper>

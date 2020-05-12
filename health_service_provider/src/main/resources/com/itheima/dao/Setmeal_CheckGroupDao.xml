@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itheima.dao.Setmeal_CheckGroupDao">
+<select id="find_By_CheckGroup_Id" parameterType="Integer" resultType="int">
+    select setmeal_id from t_setmeal_checkgroup where checkgroup_id=#{id}
+</select>
+    <insert id="add">
+        insert into t_setmeal_checkgroup(setmeal_id,checkgroup_id) values
+        <foreach collection="checkgroupIds" index="index" item="item" separator=",">
+            (#{setmealId}, #{item})
+        </foreach>
+    </insert>
+    <select id="fandGroupIdBySetmralId" parameterType="Integer" resultType="Integer">
+        select checkgroup_id from t_setmeal_checkgroup where setmeal_id=#{id}
+    </select>
+</mapper>

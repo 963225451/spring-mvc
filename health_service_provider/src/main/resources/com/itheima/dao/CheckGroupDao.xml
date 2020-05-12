@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itheima.dao.CheckGroupDao">
+    <select id="findPage" parameterType="String" resultType="checkgroup">
+        select * from t_checkgroup
+        <if test="value!=null and value.length>0">
+            where remark like #{value} or name like #{value}
+        </if>
+    </select>
+    <insert id="add" parameterType="checkgroup" useGeneratedKeys="true" keyProperty="id">
+        insert into t_checkgroup values(null,#{code},#{name},#{helpCode},#{sex},
+        #{remark},#{attention})
+    </insert>
+    <update id="update" parameterType="checkgroup">
+       update t_checkgroup set code=#{code},name=#{name},helpCode=#{helpCode},sex=#{sex},
+        remark=#{remark},attention=#{attention}  where id=#{id}
+    </update>
+    <delete id="delById" parameterType="Integer">
+       delete from t_checkgroup where id=#{id}
+    </delete>
+    <select id="fandById" parameterType="Integer" resultType="checkgroup">
+        select * from t_checkgroup where id=#{id}
+    </select>
+    <resultMap type="checkGroup" id="baseResultMap">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="code" property="code"/>
+        <result column="helpCode" property="helpCode"/>
+        <result column="sex" property="sex"/>
+        <result column="remark" property="remark"/>
+        <result column="attention" property="attention"/>
+    </resultMap>
+    <resultMap type="checkGroup" id="findByIdResultMap" extends="baseResultMap">
+        <collection property="checkItems"
+                    javaType="ArrayList" ofType="com.itheima.pojo.CheckItem" column="id"
+                    select="com.itheima.dao.CheckItemDao.findCheckItemById"></collection>
+    </resultMap> <!--根据套餐id查询检查项信息-->
+    <select id="findCheckGroupById"
+            resultMap="findByIdResultMap">
+ select * from t_checkgroup where id in (select checkgroup_id from t_setmeal_checkgroup where setmeal_id=#{id})
+  </select>
+</mapper>

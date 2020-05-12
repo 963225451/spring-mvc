@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itheima.dao.CheckGroup_CheckItemDao">
+    <select id="findByCheckitemId" parameterType="java.lang.Integer" resultType="int">
+        select checkgroup_id from t_checkgroup_checkitem where checkitem_id = #{Integer}
+    </select>
+    <insert id="setCheckGroupAndCheckItem">
+        insert into t_checkgroup_checkitem(checkgroup_id,checkitem_id) values
+        <foreach collection="checkitemIds" index="index" item="item" separator=",">
+            (#{checkGroupId}, #{item})
+        </foreach>
+    </insert>
+    <select id="find_CheckItem_By_CheckGroupId" parameterType="Integer" resultType="int">
+        select checkitem_id from t_checkgroup_checkitem where checkgroup_id=#{id}
+    </select>
+    <delete id="delByCheckGroupId" >
+       delete from t_checkgroup_checkitem where checkgroup_id=#{CheckGroupId} and checkitem_id in(
+        <foreach collection="list" index="index" item="item" separator=",">
+          ${item}
+        </foreach>
+        )
+    </delete>
+    <insert id="addByCheckGroupId">
+        insert  into t_checkgroup_checkitem(checkgroup_id,checkitem_id) values
+        <foreach collection="list" index="index" item="item" separator=",">
+            (#{CheckGroupId}, #{item})
+        </foreach>
+    </insert>
+</mapper>
